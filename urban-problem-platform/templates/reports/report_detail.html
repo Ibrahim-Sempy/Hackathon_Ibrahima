@@ -1,0 +1,77 @@
+<!-- filepath: c:\Users\HP\Desktop\Hackathon_Ibrahima\urban-problem-platform\templates\reports\report_detail.html -->
+{% extends "base.html" %}
+{% block title %}Détail du signalement{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto bg-white rounded shadow p-5 mt-5">
+    <h2 class="text-2xl font-bold mb-4 text-center">Détail du signalement</h2>
+    <ul class="list-group mb-3">
+        <li class="list-group-item"><strong>Type :</strong> {{ report.get_problem_type_display }}</li>
+        <li class="list-group-item"><strong>Description :</strong> {{ report.description }}</li>
+        <li class="list-group-item"><strong>Date :</strong> {{ report.created_at|date:"d/m/Y H:i" }}</li>
+        <li class="list-group-item"><strong>Statut :</strong> {{ report.get_status_display }}</li>
+        <li class="list-group-item"><strong>Utilisateur :</strong>
+            {% if report.user %}
+                {{ report.user.username }}
+            {% else %}
+                Anonyme
+            {% endif %}
+        </li>
+        <li class="list-group-item"><strong>Localisation :</strong> {{ report.latitude }}, {{ report.longitude }}</li>
+    </ul>
+    {% if report.photo %}
+        <div class="text-center mb-3">
+            <img src="{{ report.photo.url }}" alt="Photo du signalement" class="img-fluid rounded shadow">
+        </div>
+    {% endif %}
+    {% if report.latitude and report.longitude %}
+        <div id="map" style="height: 300px;" class="mb-3 rounded shadow"></div>
+        <script>
+            var map = L.map('map').setView([{{ report.latitude }}, {{ report.longitude }}], 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            L.marker([{{ report.latitude }}, {{ report.longitude }}]).addTo(map)
+                .bindPopup("{{ report.get_problem_type_display }}").openPopup();
+        </script>
+    {% endif %}
+
+    <!-- Affichage du nombre de votes et bouton -->
+    <div class="mb-3 text-center">
+        <span class="badge bg-primary">Votes : {{ vote_count }}</span>
+        {% if user.is_authenticated %}
+            {% if not user_has_voted %}
+                <a href="{% url 'vote_report' report.pk %}" class="btn btn-outline-success btn-sm ms-2">Voter</a>
+            {% else %}
+                <span class="text-success ms-2">Vous avez déjà voté</span>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- Affichage des commentaires -->
+    <div class="mb-4">
+        <h4>Commentaires</h4>
+        {% for comment in comments %}
+            <div class="border rounded p-2 mb-2">
+                <strong>{{ comment.user.username }}</strong> <span class="text-muted">{{ comment.created_at|date:"d/m/Y H:i" }}</span>
+                <div>{{ comment.text }}</div>
+            </div>
+        {% empty %}
+            <div class="text-muted">Aucun commentaire pour l’instant.</div>
+        {% endfor %}
+    </div>
+
+    <!-- Formulaire de commentaire -->
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Commenter</button>
+        </form>
+    {% else %}
+        <div class="alert alert-info">Connectez-vous pour commenter.</div>
+    {% endif %}
+
+    <a href="{% url 'report_list' %}" class="btn btn-secondary">Retour à la liste</a>
+</div>
+{% endblock %}

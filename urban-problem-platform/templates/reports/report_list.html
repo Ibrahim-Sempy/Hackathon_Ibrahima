@@ -1,0 +1,49 @@
+<!-- filepath: c:\Users\HP\Desktop\Hackathon_Ibrahima\urban-problem-platform\templates\reports\report_list.html -->
+{% extends "base.html" %}
+{% block title %}Liste des signalements{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-2xl font-bold mb-4 text-center">Signalements urbains</h2>
+    <div class="mb-4 text-end">
+        <a href="{% url 'report_create' %}" class="btn btn-warning">Nouveau signalement</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered bg-white rounded shadow">
+            <thead class="table-primary">
+                <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Utilisateur</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr>
+                    <td>{{ report.get_problem_type_display }}</td>
+                    <td>
+                        <a href="{% url 'report_detail' report.pk %}">
+                            {{ report.description|truncatechars:50 }}
+                        </a>
+                    </td>
+                    <td>{{ report.created_at|date:"d/m/Y H:i" }}</td>
+                    <td>{{ report.get_status_display }}</td>
+                    <td>
+                        {% if report.user %}
+                            {{ report.user.username }}
+                        {% else %}
+                            Anonyme
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucun signalement pour le moment.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
