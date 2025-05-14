@@ -16,10 +16,14 @@
                 <a href="{% url 'report_list' %}" class="no-underline text-white px-3 py-2 rounded hover:bg-blue-600 transition">Signalements</a>
                 <a href="/navigation/routes/" class="no-underline text-white px-3 py-2 rounded hover:bg-green-600 transition">Routes</a>
                 <a href="/navigation/points-of-interest/" class="no-underline text-white px-3 py-2 rounded hover:bg-cyan-600 transition">Points d'intérêt</a>
-                <a href="/admin/" class="no-underline text-white px-3 py-2 rounded hover:bg-gray-700 transition">Admin</a>
                 {% if user.is_authenticated %}
-                    <span class="mx-2">Bonjour, {{ user.username }}</span>
                     <a href="{% url 'logout' %}" class="no-underline text-white px-3 py-2 rounded hover:bg-red-600 transition">Déconnexion</a>
+                    <a href="{% url 'profile' %}" title="Mon profil" class="mx-2 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white hover:text-yellow-300 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                          <path stroke="currentColor" stroke-width="2" d="M4 20c0-4 4-7 8-7s8 3 8 7"/>
+                        </svg>
+                    </a>
                 {% else %}
                     <a href="{% url 'login' %}" class="no-underline text-white px-3 py-2 rounded hover:bg-blue-800 transition">Connexion</a>
                     <a href="{% url 'signup' %}" class="no-underline text-white px-3 py-2 rounded hover:bg-green-700 transition">Inscription</a>
