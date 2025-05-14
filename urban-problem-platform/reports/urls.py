@@ -1,0 +1,9 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('reports/', views.report_list, name='report_list'),
+    path('reports/new/', views.report_create, name='report_create'),
+    path('reports/<int:pk>/', views.report_detail, name='report_detail'),
+    path('reports/<int:pk>/edit/', views.report_edit, name='report_edit'),
+]
