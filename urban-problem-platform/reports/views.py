@@ -4,6 +4,7 @@ from .models import Report, Vote, Comment
 from .forms import ReportForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Avg
+from django.contrib.admin.views.decorators import staff_member_required
 
 def report_list(request):
     reports = Report.objects.all()
@@ -96,3 +97,38 @@ def report_stats(request):
         'avg_votes': avg_votes,
         'top_reports': top_reports,
     })
+
+@staff_member_required
+def admin_report_list(request):
+    status = request.GET.get('status', '')
+    problem_type = request.GET.get('problem_type', '')
+    reports = Report.objects.all()
+    if status:
+        reports = reports.filter(status=status)
+    if problem_type:
+        reports = reports.filter(problem_type=problem_type)
+    # Statistiques pour le diagramme
+    status_stats = reports.values('status').annotate(count=Count('id'))
+    status_labels = []
+    status_counts = []
+    status_map = dict(Report._meta.get_field('status').choices)
+    for stat in status_stats:
+        status_labels.append(status_map.get(stat['status'], stat['status']))
+        status_counts.append(stat['count'])
+    return render(request, 'reports/admin_report_list.html', {
+        'reports': reports,
+        'selected_status': status,
+        'selected_problem_type': problem_type,
+        'status_labels': status_labels,
+        'status_counts': status_counts,
+    })
+
+@staff_member_required
+def admin_report_status(request, pk):
+    report = get_object_or_404(Report, pk=pk)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(Report._meta.get_field('status').choices):
+            report.status = new_status
+            report.save()
+    return redirect('admin_report_list')

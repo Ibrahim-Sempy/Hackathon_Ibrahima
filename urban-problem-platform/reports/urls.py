@@ -8,4 +8,6 @@ urlpatterns = [
     path('<int:pk>/', views.report_detail, name='report_detail'),
     path('<int:pk>/vote/', views.vote_report, name='vote_report'),
     path('stats/', views.report_stats, name='report_stats'),
+    path('admin/', views.admin_report_list, name='admin_report_list'),
+    path('admin/<int:pk>/status/', views.admin_report_status, name='admin_report_status'),
 ]

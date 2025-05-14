@@ -1,56 +1,140 @@
-# Urban Problem Reporting and Navigation Platform
+# Plateforme de Signalement et de Navigation Urbaine – Guinée
 
-This project is designed to provide a platform for reporting urban problems and navigating through various points of interest in Guinea. Users can report issues they encounter in their urban environment and receive guidance on navigating through the city.
+## Prérequis
 
-## Features
+- Python 3.8+ installé
+- [pip](https://pip.pypa.io/en/stable/) installé
+- [Git](https://git-scm.com/) (optionnel, si tu clones le projet)
+- [PostgreSQL](https://www.postgresql.org/) (optionnel, si tu utilises PostgreSQL)
+- Un accès internet pour les dépendances et les CDN (Bootstrap, Chart.js, Leaflet...)
 
-- **Problem Reporting**: Users can submit reports about urban issues such as potholes, broken streetlights, and other infrastructure problems.
-- **Navigation**: The platform provides navigation features to help users find routes and points of interest.
-- **Database**: Utilizes SQLite3 for data storage, making it lightweight and easy to manage.
-- **Admin Interface**: An admin interface is available for managing reports and navigation data.
+## 1. Récupération du code
 
-## Setup Instructions
+Clone le dépôt ou copie les fichiers sur la nouvelle machine :
 
-1. **Clone the Repository**:
-   ```
-   git clone <repository-url>
-   cd urban-problem-platform
-   ```
 
-2. **Create a Virtual Environment**:
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
+git clone <url-du-depot>
+cd urban-problem-platform
 
-3. **Install Requirements**:
-   ```
-   pip install -r requirements.txt
-   ```
 
-4. **Run Migrations**:
-   ```
-   python manage.py migrate
-   ```
+## 2. Création et activation d’un environnement virtuel
 
-5. **Run the Development Server**:
-   ```
-   python manage.py runserver
-   ```
 
-6. **Access the Application**:
-   Open your web browser and go to `http://127.0.0.1:8000/`.
+python -m venv venv
+# Sous Windows
+venv\Scripts\activate
+# Sous Mac/Linux
+# source venv/bin/activate
 
-## Usage Guidelines
+## 3. Installation des dépendances
 
-- Users can navigate to the reporting section to submit new reports.
-- The navigation section allows users to view routes and alerts.
-- Admins can manage reports and navigation data through the Django admin interface.
 
-## Contributing
+pip install -r requirements.txt
 
-Contributions are welcome! Please submit a pull request or open an issue for any enhancements or bug fixes.
 
-## License
+Si tu n’as pas de fichier `requirements.txt`, crée-le avec :
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+
+Django>=4.2
+Pillow
+
+
+Et installe :
+
+
+pip install Django Pillow
+
+
+## 4. Configuration de la base de données
+
+Par défaut, le projet utilise SQLite (aucune config requise).  
+Si tu utilises PostgreSQL, configure `DATABASES` dans `urban-problem-platform/settings.py`.
+
+## 5. Application des migrations
+
+
+python manage.py migrate
+
+
+## 6. Création d’un superutilisateur (admin)
+
+
+python manage.py createsuperuser
+
+Suis les instructions pour définir un nom d’utilisateur, un email et un mot de passe.
+
+## 7. Collecte des fichiers statiques (optionnel en dev)
+
+
+python manage.py collectstatic
+
+## 8. Lancement du serveur de développement
+
+
+python manage.py runserver
+
+
+## 9. Accès à l’application
+
+- **Page d’accueil/inscription** : [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+- **Connexion** : [http://127.0.0.1:8000/accounts/login/](http://127.0.0.1:8000/accounts/login/)
+- **Tableau de bord admin signalements** : [http://127.0.0.1:8000/reports/admin/](http://127.0.0.1:8000/reports/admin/) (réservé aux administrateurs)
+- **Admin Django** : [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+
+## 10. Téléversement de fichiers (photos)
+
+Assure-toi que le dossier `media/` existe à la racine du projet et que tu as les droits d’écriture.
+
+## 11. Configuration email (pour la production)
+
+Configure les paramètres email dans `settings.py` pour l’envoi de mails (confirmation, notifications…).
+
+## 12. (Optionnel) Déploiement
+
+Pour un déploiement en production, configure :
+- Un serveur web (Nginx, Apache)
+- Un serveur WSGI (Gunicorn, uWSGI)
+- Un domaine et HTTPS
+- Les variables d’environnement (SECRET_KEY, DEBUG, etc.)
+
+
+
+## Fonctionnalités principales
+
+- Inscription/connexion sécurisée
+- Signalement de problèmes urbains (avec photo, géolocalisation)
+- Consultation et filtrage des signalements sur carte et tableau
+- Tableau de bord administrateur avec gestion des statuts et statistiques (diagramme en cercle)
+- Gestion des routes et points d’intérêt
+- Interface différenciée utilisateur/admin
+
+
+
+## Structure du projet
+
+
+urban-problem-platform/
+│
+├── accounts/
+├── navigation/
+├── reports/
+├── templates/
+│   ├── base.html
+│   ├── registration/
+│   ├── navigation/
+│   └── reports/
+├── media/
+├── manage.py
+└── requirements.txt
+
+
+
+
+## Conseils
+
+- Pour tester les fonctionnalités admin, connecte-toi avec un compte superutilisateur.
+- Pour ajouter des signalements, utilise le formulaire prévu dans l’interface.
+- Pour toute erreur, consulte la console ou les logs Django.
+
+
+**Bonne utilisation de la plateforme !**
