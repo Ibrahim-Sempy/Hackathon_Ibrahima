@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import Report, Vote, Comment
 from .forms import ReportForm, CommentForm
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Avg
 
 def report_list(request):
     reports = Report.objects.all()
@@ -80,3 +81,18 @@ def vote_report(request, pk):
     report = get_object_or_404(Report, pk=pk)
     Vote.objects.get_or_create(report=report, user=request.user)
     return redirect('report_detail', pk=pk)
+
+@login_required
+def report_stats(request):
+    total_reports = Report.objects.count()
+    reports_by_type = Report.objects.values('problem_type').annotate(count=Count('id'))
+    reports_by_status = Report.objects.values('status').annotate(count=Count('id'))
+    avg_votes = Vote.objects.values('report').annotate(votes=Count('id')).aggregate(avg=Avg('votes'))['avg'] or 0
+    top_reports = Report.objects.annotate(num_votes=Count('votes')).order_by('-num_votes')[:5]
+    return render(request, 'reports/report_stats.html', {
+        'total_reports': total_reports,
+        'reports_by_type': reports_by_type,
+        'reports_by_status': reports_by_status,
+        'avg_votes': avg_votes,
+        'top_reports': top_reports,
+    })

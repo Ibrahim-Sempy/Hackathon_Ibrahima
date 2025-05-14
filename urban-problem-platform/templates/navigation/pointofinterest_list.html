@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Points d'intérêt{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-2xl font-bold mb-4 text-center">Points d'intérêt urbains</h2>
+    {% comment %} <a href="{% url 'pointofinterest_create' %}" class="btn btn-success mb-3">Ajouter un point d'intérêt</a> {% endcomment %}
+    <div class="table-responsive">
+        <table class="table table-bordered bg-white rounded shadow">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Catégorie</th>
+                    <th>Description</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for point in object_list %}
+                <tr>
+                    <td>{{ point.name }}</td>
+                    <td>{{ point.category }}</td>
+                    <td>{{ point.description|truncatechars:50 }}</td>
+                    <td>{{ point.latitude }}</td>
+                    <td>{{ point.longitude }}</td>
+                    <td>
+                        {% comment %} <a href="{% url 'pointofinterest_edit' point.pk %}" class="btn btn-sm btn-warning">Modifier</a>
+                        <a href="{% url 'pointofinterest_delete' point.pk %}" class="btn btn-sm btn-danger">Supprimer</a> {% endcomment %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">Aucun point d'intérêt trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

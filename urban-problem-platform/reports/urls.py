@@ -7,4 +7,5 @@ urlpatterns = [
     path('map/', views.report_map, name='report_map'),
     path('<int:pk>/', views.report_detail, name='report_detail'),
     path('<int:pk>/vote/', views.vote_report, name='vote_report'),
+    path('stats/', views.report_stats, name='report_stats'),
 ]

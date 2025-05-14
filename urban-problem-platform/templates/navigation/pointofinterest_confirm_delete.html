@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Supprimer le point d'intérêt{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="bg-white rounded shadow p-5 max-w-md mx-auto">
+        <h2 class="text-xl font-bold mb-4 text-center">Supprimer le point d'intérêt</h2>
+        <p class="mb-4 text-center">Voulez-vous vraiment supprimer <strong>{{ poi.name }}</strong> ?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center gap-2">
+                <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+                <a href="{% url 'points_of_interest' %}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

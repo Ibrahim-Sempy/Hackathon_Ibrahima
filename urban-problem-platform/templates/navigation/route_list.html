@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Liste des routes{% endblock %}
+{% block content %}
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-8">
+        <input type="text" name="q" class="form-control" placeholder="Rechercher une route..." value="{{ query }}">
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+    </div>
+</form>
+<div class="container mt-5">
+    <h2 class="text-2xl font-bold mb-4 text-center">Liste des routes urbaines</h2>
+    {% comment %} <a href="{% url 'route_create' %}" class="btn btn-success mb-3">Ajouter une route</a> {% endcomment %}
+
+    <div id="routes-map" style="height: 400px;" class="mb-4 rounded shadow"></div>
+    <div class="table-responsive">
+        <table class="table table-bordered bg-white rounded shadow">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Départ</th>
+                    <th>Arrivée</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for route in routes %}
+                <tr>
+                    <td>{{ route.name }}</td>
+                    <td>{{ route.description|truncatechars:50 }}</td>
+                    <td>{{ route.start_latitude }}, {{ route.start_longitude }}</td>
+                    <td>{{ route.end_latitude }}, {{ route.end_longitude }}</td>
+                    <td>
+                        {% comment %} <a href="{% url 'route_edit' route.pk %}" class="btn btn-sm btn-warning">Modifier</a> {% endcomment %}
+                        <a href="{% url 'route_reports' route.pk %}" class="btn btn-info btn-sm">Voir les signalements</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucune route enregistrée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    var map = L.map('routes-map').setView([9.6412, -13.5784], 7); 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    {% for route in routes %}
+        // Tracé de la route
+        var latlngs = [
+            [{{ route.start_latitude }}, {{ route.start_longitude }}],
+            [{{ route.end_latitude }}, {{ route.end_longitude }}]
+        ];
+        var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map);
+        polyline.bindPopup("<b>{{ route.name|escapejs }}</b><br>{{ route.description|escapejs }}");
+    {% endfor %}
+</script>
+{% endblock %}

@@ -1,0 +1,33 @@
+<!-- filepath: c:\Users\HP\Desktop\Hackathon_Ibrahima\urban-problem-platform\templates\reports\report_stats.html -->
+{% extends "base.html" %}
+{% block title %}Statistiques des signalements{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-2xl font-bold mb-4 text-center">Statistiques des signalements</h2>
+    <ul class="list-group mb-4">
+        <li class="list-group-item"><strong>Total signalements :</strong> {{ total_reports }}</li>
+        <li class="list-group-item"><strong>Votes moyens par signalement :</strong> {{ avg_votes|floatformat:1 }}</li>
+    </ul>
+    <h4>Répartition par type</h4>
+    <ul>
+        {% for t in reports_by_type %}
+            <li>{{ t.problem_type|capfirst }} : {{ t.count }}</li>
+        {% endfor %}
+    </ul>
+    <h4>Répartition par statut</h4>
+    <ul>
+        {% for s in reports_by_status %}
+            <li>{{ s.status|capfirst }} : {{ s.count }}</li>
+        {% endfor %}
+    </ul>
+    <h4>Top 5 signalements populaires</h4>
+    <ul>
+        {% for r in top_reports %}
+            <li>
+                <a href="{% url 'report_detail' r.pk %}">{{ r.description|truncatechars:40 }}</a>
+                ({{ r.num_votes }} votes)
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

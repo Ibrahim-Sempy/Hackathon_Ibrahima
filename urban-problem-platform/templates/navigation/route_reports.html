@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Signalements pour {{ route.name }}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-2xl font-bold mb-4 text-center">
+        Signalements pour la route : {{ route.name }}
+    </h2>
+    <a href="{% url 'route_list' %}" class="btn btn-secondary mb-3">Retour à la liste des routes</a>
+    <div class="table-responsive">
+        <table class="table table-bordered bg-white rounded shadow">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr>
+                    <td>{{ report.description|truncatechars:50 }}</td>
+                    <td>{{ report.problem_type }}</td>
+                    <td>{{ report.status }}</td>
+                    <td>{{ report.created_at|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">Aucun signalement pour cette route.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

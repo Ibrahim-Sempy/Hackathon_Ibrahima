@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from navigation.models import Route
 
 class Report(models.Model):
     PROBLEM_TYPES = [
@@ -16,6 +17,7 @@ class Report(models.Model):
     photo = models.ImageField(upload_to='reports/photos/', blank=True, null=True)
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+    route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True, blank=True, related_name='reports')
     status = models.CharField(max_length=20, choices=[('new', 'Nouveau'), ('in_progress', 'En cours'), ('resolved', 'Résolu')], default='new')
     created_at = models.DateTimeField(auto_now_add=True)
 
