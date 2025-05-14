@@ -11,12 +11,19 @@
     <header class="bg-primary text-white py-3 shadow mb-4">
         <div class="container d-flex justify-content-between align-items-center">
             <h2 class="m-0 text-xl font-bold">Plateforme Urbaine Guinée</h2>
-            <nav>
-                <a href="{% url 'home' %}" class="btn btn-link text-white">Accueil</a>
-                <a href="{% url 'report_list' %}" class="btn btn-link text-white">Signalements</a>
-                <a href="/navigation/routes/" class="btn btn-link text-white">Routes</a>
-                <a href="/navigation/points-of-interest/" class="btn btn-link text-white">Points d'intérêt</a>
-                <a href="/admin/" class="btn btn-link text-white">Admin</a>
+            <nav class="d-flex gap-3">
+                <a href="{% url 'home' %}" class="no-underline text-white px-3 py-2 rounded hover:bg-blue-700 transition">Accueil</a>
+                <a href="{% url 'report_list' %}" class="no-underline text-white px-3 py-2 rounded hover:bg-blue-600 transition">Signalements</a>
+                <a href="/navigation/routes/" class="no-underline text-white px-3 py-2 rounded hover:bg-green-600 transition">Routes</a>
+                <a href="/navigation/points-of-interest/" class="no-underline text-white px-3 py-2 rounded hover:bg-cyan-600 transition">Points d'intérêt</a>
+                <a href="/admin/" class="no-underline text-white px-3 py-2 rounded hover:bg-gray-700 transition">Admin</a>
+                {% if user.is_authenticated %}
+                    <span class="mx-2">Bonjour, {{ user.username }}</span>
+                    <a href="{% url 'logout' %}" class="no-underline text-white px-3 py-2 rounded hover:bg-red-600 transition">Déconnexion</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="no-underline text-white px-3 py-2 rounded hover:bg-blue-800 transition">Connexion</a>
+                    <a href="{% url 'signup' %}" class="no-underline text-white px-3 py-2 rounded hover:bg-green-700 transition">Inscription</a>
+                {% endif %}
             </nav>
         </div>
     </header>

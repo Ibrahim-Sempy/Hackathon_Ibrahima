@@ -1,0 +1,9 @@
+<!-- filepath: c:\Users\HP\Desktop\Hackathon_Ibrahima\urban-problem-platform\templates\registration\logged_out.html -->
+{% extends "base.html" %}
+{% block title %}Déconnexion{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white rounded shadow p-5 mt-5 text-center">
+    <h2 class="text-2xl font-bold mb-4">Vous êtes déconnecté.</h2>
+    <a href="{% url 'login' %}" class="btn btn-primary">Se reconnecter</a>
+</div>
+{% endblock %}
